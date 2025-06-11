@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 탄소 발자국 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #E9D8A6; /* Using the vibrantPalette yellow background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container-wrapper {
+            background-color: white;
+            border-radius: 16px; /* rounded-lg equivalent */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl equivalent */
+            padding: 32px; /* p-8 equivalent */
+            max-width: 600px;
+            width: 100%;
+        }
+        .input-group {
+            margin-bottom: 24px; /* space-y-6 equivalent */
+        }
+        .input-label {
+            display: block;
+            color: #4A5568; /* text-gray-700 equivalent */
+            font-size: 0.875rem; /* text-sm equivalent */
+            font-weight: 700; /* font-bold equivalent */
+            margin-bottom: 8px; /* mb-2 equivalent */
+        }
+        .input-field {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow equivalent */
+            appearance: none;
+            border-radius: 4px; /* rounded equivalent */
+            width: 100%;
+            padding: 8px 12px; /* py-2 px-3 equivalent */
+            color: #4A5568; /* text-gray-700 equivalent */
+            line-height: 1.25; /* leading-tight equivalent */
+            outline: none;
+            background-color: #F7FAFC; /* bg-gray-100 equivalent */
+        }
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); /* focus:shadow-outline equivalent */
+        }
+        .calculate-button {
+            background-color: #0A9396; /* bg-[#0A9396] */
+            color: white;
+            font-weight: 700; /* font-bold */
+            padding: 12px 24px; /* py-3 px-6 */
+            border-radius: 8px; /* rounded-lg */
+            width: 100%;
+            transition: all 0.3s ease; /* transition duration-300 */
+        }
+        .calculate-button:hover {
+            background-color: #005F73; /* hover:bg-[#005F73] */
+            transform: scale(1.05); /* transform hover:scale-105 */
+        }
+        .result-box {
+            margin-top: 32px; /* mt-8 */
+            padding: 24px; /* p-6 */
+            background-color: #94D2BD; /* bg-[#94D2BD] */
+            color: white;
+            border-radius: 8px; /* rounded-lg */
+            text-align: center;
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+        }
+        .result-value {
+            font-size: 3rem; /* text-5xl */
+            font-weight: 900; /* font-black */
+        }
+        .guidance-box {
+            margin-top: 16px; /* mt-4 */
+            background-color: white;
+            color: #4A5568; /* text-gray-800 */
+            border-radius: 8px; /* rounded-lg */
+            padding: 24px; /* p-6 */
+            text-align: left;
+        }
+        .guidance-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700; /* font-bold */
+            color: #005F73; /* text-[#005F73] */
+            margin-bottom: 16px; /* mb-4 */
+        }
+        .pledge-practice-box {
+            margin-top: 32px;
+            background-color: white;
+            color: #4A5568;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: left;
+        }
+        .pledge-practice-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #005F73;
+            margin-bottom: 16px;
+        }
+        .textarea-field {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            appearance: none;
+            border-radius: 4px;
+            width: 100%;
+            padding: 8px 12px;
+            color: #4A5568;
+            line-height: 1.25;
+            outline: none;
+            background-color: #F7FAFC;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-wrapper">
+        <h2 class="text-3xl font-bold text-[#CA6702] text-center mb-6">👣 나의 탄소 발자국 계산해보기</h2>
+        <p class="text-lg text-gray-700 mb-8 text-center">
+            우리의 일상생활이 얼마나 많은 탄소를 배출하는지 알아볼까요? 아래 질문에 답하고 나의 탄소 발자국을 측정해 보세요!
+        </p>
+
+        <div class="space-y-6">
+            <div class="input-group">
+                <label for="busStops" class="input-label">버스 탑승 (하루 평균 몇 정거장):</label>
+                <input type="number" id="busStops" value="0" min="0" class="input-field">
+            </div>
+            <div class="input-group">
+                <label for="toothbrushCup" class="input-label">양치컵 사용 (하루 몇 번 사용):</label>
+                <input type="number" id="toothbrushCup" value="3" min="0" class="input-field">
+            </div>
+            <div class="input-group">
+                <label for="leftoverLunch" class="input-label">급식을 남기나요?</label>
+                <select id="leftoverLunch" class="input-field">
+                    <option value="no">아니요, 거의 다 먹어요</option>
+                    <option value="yes">네, 가끔 남겨요</option>
+                    <option value="often">자주 남겨요</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="walkingDistance" class="input-label">하루에 몇 km 정도를 걷나요?</label>
+                <input type="number" id="walkingDistance" value="2" min="0" step="0.1" class="input-field">
+            </div>
+            <div class="input-group">
+                <label for="disposableItems" class="input-label">일회용품을 하루에 몇 개 사용하나요? (예: 종이컵, 빨대 등)</label>
+                <input type="number" id="disposableItems" value="1" min="0" class="input-field">
+            </div>
+            <div class="input-group">
+                <label for="screenTime" class="input-label">스마트폰/컴퓨터 사용 시간 (하루 평균 몇 시간):</label>
+                <input type="number" id="screenTime" value="3" min="0" step="0.5" class="input-field">
+            </div>
+            <div class="input-group">
+                <label for="showerTime" class="input-label">하루 샤워 시간 (분):</label>
+                <input type="number" id="showerTime" value="10" min="0" class="input-field">
+            </div>
+            <div class="input-group">
+                <label for="meatConsumptionCategory" class="input-label">고기류 섭취 빈도:</label>
+                <select id="meatConsumptionCategory" class="input-field">
+                    <option value="very_often">거의 매일</option>
+                    <option value="often">주 3-4회</option>
+                    <option value="sometimes">주 1-2회</option>
+                    <option value="rarely">채식 위주</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="vegetableConsumptionCategory" class="input-label">채소류 섭취 빈도:</label>
+                <select id="vegetableConsumptionCategory" class="input-field">
+                    <option value="daily">매일</option>
+                    <option value="often">주 3-4회</option>
+                    <option value="sometimes">가끔</option>
+                    <option value="rarely">거의 안 먹음</option>
+                </select>
+            </div>
+            <button id="calculateCarbon" class="calculate-button">
+                나의 탄소 발자국 계산하기
+            </button>
+        </div>
+        
+        <div id="carbonResult" class="result-box hidden">
+            <p class="text-3xl mb-2">💡 나의 하루 예상 탄소 발자국은...</p>
+            <p><span id="carbonValue" class="result-value">0</span> kg CO2e 입니다!</p>
+            <p class="text-sm mt-4">이 수치는 대략적인 값이며, 실제와는 다를 수 있습니다.</p>
+            <div id="carbonGuidance" class="mt-4 text-white text-lg font-semibold">
+                <!-- Carbon guidance will be inserted here -->
+            </div>
+
+            <div class="guidance-box mt-8">
+                <h3 class="guidance-title">⭐ 탄소 배출량에 따른 안내 예시</h3>
+                <ul class="list-disc list-inside space-y-2 text-lg">
+                    <li><span class="font-bold">~1.0kg:</span> 아주 훌륭해요! 계속 잘 실천하고 있어요! 👍</li>
+                    <li><span class="font-bold">1.0~2.5kg:</span> 좋아요! 하지만 더 줄일 수 있어요. 일회용품 줄이기, 걷기 생활화를 시도해 보세요! 🚶‍♀️🛍️</li>
+                    <li><span class="font-bold">2.5~4.0kg:</span> 개선이 필요해요. 고기 줄이기, 샤워 시간을 더 짧게 해 보세요! 🍖💧</li>
+                    <li><span class="font-bold">4.0kg 이상:</span> 환경을 위해 전반적인 습관 개선이 시급합니다! 🌍💡</li>
+                </ul>
+            </div>
+
+            <div class="guidance-box mt-8">
+                <h3 class="guidance-title">📝 계산 결과 활용 방법</h3>
+                <ul class="list-disc list-inside space-y-2 text-lg">
+                    <li>오늘 내가 얼마나 많은 탄소를 배출했는지 확인하고, 일상에서 줄일 수 있는 부분을 찾는 데 활용해요.</li>
+                    <li>반 친구들과 탄소 배출량 비교해보기</li>
+                    <li>가장 탄소가 많이 나온 항목 분석</li>
+                    <li>탄소 줄이기 도전 미션 세우기</li>
+                </ul>
+            </div>
+
+            <div class="pledge-practice-box mt-8">
+                <h3 class="pledge-practice-title">✍️ 나의 다짐과 실천</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="myPledge" class="input-label">오늘 나의 탄소 줄이기 다짐을 적어보세요:</label>
+                        <textarea id="myPledge" class="textarea-field" rows="3" placeholder="예: 내일은 고기 대신 채소 반찬을 먹을래요!"></textarea>
+                    </div>
+                    <div>
+                        <label for="myPractice" class="input-label">오늘 내가 실천한 친환경 행동을 적어보세요:</label>
+                        <textarea id="myPractice" class="textarea-field" rows="3" placeholder="예: 양치할 때 컵을 사용했어요. 전자기기 사용을 1시간 줄였어요."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculateCarbon').addEventListener('click', () => {
+            // Get values from input fields, default to 0 if empty
+            const busStops = parseFloat(document.getElementById('busStops').value) || 0;
+            const toothbrushCup = parseFloat(document.getElementById('toothbrushCup').value) || 0;
+            const leftoverLunch = document.getElementById('leftoverLunch').value;
+            const walkingDistance = parseFloat(document.getElementById('walkingDistance').value) || 0;
+            const disposableItems = parseFloat(document.getElementById('disposableItems').value) || 0;
+            const screenTime = parseFloat(document.getElementById('screenTime').value) || 0;
+            const showerTime = parseFloat(document.getElementById('showerTime').value) || 0;
+            const meatConsumptionCategory = document.getElementById('meatConsumptionCategory').value;
+            const vegetableConsumptionCategory = document.getElementById('vegetableConsumptionCategory').value;
+
+            let dailyCarbon = 0; // Daily carbon in kg CO2e
+
+            // Carbon calculation logic based on user inputs
+            // Bus: approx. 0.05 kg CO2e per stop
+            dailyCarbon += (busStops * 0.05);
+
+            // Toothbrush cup: penalty for not using a cup. Increased penalty if no cup is used.
+            // Small carbon for using a cup (water/toothpaste production)
+            if (toothbrushCup === 0) dailyCarbon += (3 * 0.03); // Assuming 3 brushes/day if no cup used
+            else dailyCarbon += (toothbrushCup * 0.005); // Small carbon for using cup
+
+            // Leftover lunch: increased impact based on frequency
+            if (leftoverLunch === 'yes') dailyCarbon += 0.5;
+            else if (leftoverLunch === 'often') dailyCarbon += 1.2;
+
+            // Walking: reduction in carbon based on distance walked
+            dailyCarbon -= (walkingDistance * 0.15);
+
+            // Disposable items: increased impact per item
+            dailyCarbon += (disposableItems * 0.2);
+
+            // Screen time: increased impact per hour
+            dailyCarbon += (screenTime * 0.05);
+
+            // Shower time: approx. 0.01 kg CO2e per minute of hot water
+            dailyCarbon += (showerTime * 0.01);
+
+            // Meat consumption: impact based on frequency
+            if (meatConsumptionCategory === 'very_often') dailyCarbon += 2.0;
+            else if (meatConsumptionCategory === 'often') dailyCarbon += 1.0;
+            else if (meatConsumptionCategory === 'sometimes') dailyCarbon += 0.5;
+            else if (meatConsumptionCategory === 'rarely') dailyCarbon += 0.1;
+
+            // Vegetable consumption: minor adjustment based on frequency
+            if (vegetableConsumptionCategory === 'daily') dailyCarbon -= 0.1; // Slight positive effect
+            else if (vegetableConsumptionCategory === 'rarely') dailyCarbon += 0.2; // Slight negative effect if very low
+
+            // Round the daily carbon footprint to 2 decimal places
+            dailyCarbon = Math.round(dailyCarbon * 100) / 100;
+
+            // Ensure carbon footprint is not negative
+            if (dailyCarbon < 0) dailyCarbon = 0;
+
+            // Display the calculated carbon footprint
+            document.getElementById('carbonValue').textContent = dailyCarbon;
+            
+            // Provide guidance based on the calculated carbon footprint
+            const carbonGuidanceDiv = document.getElementById('carbonGuidance');
+            if (dailyCarbon <= 1.0) {
+                carbonGuidanceDiv.textContent = '아주 훌륭해요! 계속 잘 실천하고 있어요! 👍';
+            } else if (dailyCarbon <= 2.5) {
+                carbonGuidanceDiv.textContent = '좋아요! 하지만 더 줄일 수 있어요. 일회용품 줄이기, 걷기 생활화를 시도해 보세요! 🚶‍♀️🛍️';
+            } else if (dailyCarbon <= 4.0) {
+                carbonGuidanceDiv.textContent = '개선이 필요해요. 고기 줄이기, 샤워 시간을 더 짧게 해 보세요! 🍖💧';
+            } else {
+                carbonGuidanceDiv.textContent = '환경을 위해 전반적인 습관 개선이 시급합니다! 🌍💡';
+            }
+            document.getElementById('carbonResult').classList.remove('hidden'); // Show the result box
+        });
+    </script>
+</body>
+</html>
